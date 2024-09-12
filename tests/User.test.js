@@ -6,6 +6,9 @@ const wrondPassword = "12315646";
 
 // User tests here
 describe("User property tests", () => {
+  test("User class should create user instance", () => {
+    expect(user).toBeInstanceOf(User);
+  });
   // test username
   test("username should be a string", () => {
     expect(typeof user.userName).toBe("string");
