@@ -1,5 +1,6 @@
 const Scooter = require("../src/Scooter");
 
+const scooter = new Scooter()
 // typeof scooter === object
 describe("scooter object", () => {
   test("Scooter class should create Scooter instance", () => {

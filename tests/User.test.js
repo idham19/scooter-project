@@ -8,7 +8,7 @@ const wrondPassword = "12315646";
 describe("User property tests", () => {
   // test username
   test("username should be a string", () => {
-    expect(typeof user.username).toBe("string");
+    expect(typeof user.userName).toBe("string");
   });
   // test password
   test("password should be valid", () => {
@@ -22,8 +22,9 @@ describe("User property tests", () => {
 
 // test login
 describe("Login Test", () => {
-  it("provided password should match the existed password", () => {
-    expect(user.login(correctPassword)).toBe(true);
+  it("provided password should match the password", () => {
+    user.login(correctPassword);
+    expect(user.loggedin).toBe(true);
   });
   test("if password doesn't match the existing password error should be thrown", () => {
     expect(() => user.login(wrondPassword)).toThrowError("incorrect password");
@@ -33,10 +34,10 @@ describe("Login Test", () => {
 describe("Logout Test", () => {
   test("the user should be logged Out ", () => {
     //first we need to loggedin  in order to loggedout
-    user.login("test123");
-    expect(user.loggedIn).toBe(true);
+    user.login(correctPassword);
+    expect(user.loggedin).toBe(true);
     //now whe we use logout function the user should be loggedout
     user.logout();
-    expect(user.loggedIn).toBe(false);
+    expect(user.loggedin).toBe(false);
   });
 });
