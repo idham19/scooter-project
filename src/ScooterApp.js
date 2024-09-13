@@ -76,15 +76,18 @@ class ScooterApp {
 
   /**Locate the registered user and call its logout method. Log user is logged out to the console.
 If the user cannot be located, throw no such user is logged in erro */
-  logoutUser(username) {
-    if (
-      !this.registeredUsers.hasOwnProperty(username) ||
-      this.registeredUsers[username].loggedin == false
-    ) {
-      throw new Error("no such user is logged in");
-    }
-    this.registeredUsers[username].logout();
+logoutUser(username) {
+  // Check if the username is in the registered users
+  if (
+    !this.registeredUsers.hasOwnProperty(username) ||
+    this.registeredUsers[username].loggedin === false
+  ) {
+    throw new Error("no such user is logged in");
   }
+
+  // Proceed to log out the user
+  this.registeredUsers[username].logout();
+}
 
 //-----------------------------------------------------------
 //-----------------------------------------------------------

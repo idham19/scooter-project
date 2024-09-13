@@ -55,10 +55,14 @@ describe("logoutUser(username)", () => {
     user.logout;
     expect(user.loggedin).toBe(false);
   });
+
   test("user who is already logged out should throw an error", () => {
     const user = new User("lounes", "123456789", 28);
-    user.logout;
-    expect(() => scooterApp.logoutUser(user)).toThrowError(
+    scooterApp.registeredUsers["lounes"] = user; // Add user to registered users
+    user.loggedin = false; // Ensure the user is logged out
+
+    // Test for error when trying to log out an already logged-out user
+    expect(() => scooterApp.logoutUser("lounes")).toThrowError(
       "no such user is logged in"
     );
   });
@@ -67,8 +71,25 @@ describe("logoutUser(username)", () => {
       "no such user is logged in"
     );
   });
+  test('should log out the user who is registered and logged in', () => {
+    const logOutSpy = jest.spyOn(scooterApp.registeredUsers.user1, 'logout');
+    
+    // Set user1 to logged in
+    scooterApp.registeredUsers.user1.loggedin = true;
+    
+    scooterApp.logoutUser("user1");
+    
+    // Check if the logout method was called
+    expect(logOutSpy).toHaveBeenCalled();
+    expect(scooterApp.registeredUsers.user1.loggedin).toBe(false); // Assuming logout method sets loggedin to false
+    
+    // Clean up
+    logOutSpy.mockRestore();
+  });
 });
 // rent scooter
+//---------------------------------------------------
+//---------------------------------------------------
 describe("rentScooter(scooter, user)", () => {
   test("rentScooter should remove the rented scooter from the station", () => {
     const user = new User("kevin", "1234", 36);
@@ -156,3 +177,26 @@ describe("createScooter", () => {
     logSpy.mockRestore();
   });
 });
+
+//-------------------------------------------------
+//-------------------------------------------------
+describe("Print() Method test",()=>{
+
+  test('should log registered users correctly', () => {
+    const logSpy = jest.spyOn(console, 'log');
+    
+    // Call the method you want to test
+    scooterApp.print();
+    
+    // Define the expected output
+    const expectedUsersOutput = `These are the registered users: ${JSON.stringify(scooterApp.registeredUsers, null, 2)}`;
+    const expectedStationsOutput = `these are The Stations : ${JSON.stringify(scooterApp.stations, null, 2)}`;
+    
+    // Check if the console.log was called with the expected output
+    expect(logSpy).toHaveBeenCalledWith(expectedUsersOutput);
+    expect(logSpy).toHaveBeenCalledWith(expectedStationsOutput);
+    
+    // Clean up
+    logSpy.mockRestore();
+  });
+})

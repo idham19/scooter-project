@@ -13,9 +13,9 @@ class Scooter {
   }
 
   rent(user) {
-    if (!(user instanceof User)) {
-      throw new Error("User argument must be a User object");
-    }
+    // if (!(user instanceof User)) {
+    //   throw new Error("User argument must be a User object");
+    // }
     if (this.charge > 20 && this.isBroken == false) {
       this.station = null;
       this.user = user;

@@ -12,7 +12,7 @@ class User {
     } else throw new Error("incorrect password");
   }
   logout() {
-    if (this.loggedin === true) {
+    if (this.loggedin == true) {
       this.loggedin = false;
     }
   }
