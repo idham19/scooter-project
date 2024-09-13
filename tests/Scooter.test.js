@@ -10,6 +10,10 @@ describe("scooter object", () => {
   });
 });
 
+
+
+//-------------------------------------------------
+//-------------------------------------------------
 // Method tests
 describe("scooter methods", () => {
   // tests here!
@@ -51,7 +55,9 @@ describe("scooter methods", () => {
       expect(scooter.user).toBe(null); // No user should be assigned
     });
   });
-
+  //-------------------------------------------------
+  //-------------------------------------------------
+  
   // dock method
   describe("dock (station) method Test", () => {
     const user = new User("Tom", "password123", 21);
@@ -65,6 +71,9 @@ describe("scooter methods", () => {
     });
   });
 
+  //-------------------------------------------------
+  //-------------------------------------------------
+  //requestRepair Method
   describe("requestRepair() method", () => {
     const user = new User("Juba", "password123", 21);
     const scooter = new Scooter("station A", user, 10, true);
@@ -76,17 +85,22 @@ describe("scooter methods", () => {
       expect(logSpy).toHaveBeenCalledWith("repair completed");
     },10000);
   });
+  //-------------------------------------------------
 
   // charge method// first way to do it
-
+  
   // describe(" recharge scooter  to 100%.", () => {
-  //      test("Set a timer to incrementally update the Scooter's charge to 100.",async()=>{
-  //       const user = new User("Juba", "password123", 21);
-  //       const scooter = new Scooter("Station A", user, 30, false)
-  //       await scooter.recharge(); // we need to wait for the charge!
-  //       await new Promise(resolve => setTimeout(resolve, 3000));
-  //       expect(scooter.charge).toBe(100)
-  //      },20000)
+    //      test("Set a timer to incrementally update the Scooter's charge to 100.",async()=>{
+      //       const user = new User("Juba", "password123", 21);
+      //       const scooter = new Scooter("Station A", user, 30, false)
+      //       await scooter.recharge(); // we need to wait for the charge!
+      //       await new Promise(resolve => setTimeout(resolve, 3000));
+      //       expect(scooter.charge).toBe(100)
+      //      },20000)
+
+      //-------------------------------------------------
+      //-------------------------------------------------
+      // charge method// first way to do it
   describe(" recharge scooter  to 100%.", () => {
     test("Set a timer to incrementally update the Scooter's charge to 100%", async () => {
       const user = new User("Juba", "password123", 21);
