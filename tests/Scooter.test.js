@@ -15,13 +15,10 @@ describe("scooter methods", () => {
   // tests here!
 
   // rent method
-  const Scooter = require("./Scooter"); // Assuming the Scooter class is in Scooter.js
-  const User = require("./User"); // Assuming there's a User class
-
   describe("Scooter rent() method tests", () => {
     test("should rent the scooter if charge is above 20% and not broken", () => {
       const user = new User("Joe Bloggs", "password123", 21); // Create a test user
-      const scooter = new Scooter("Station A", 50, false); // A scooter with 50% charge and not broken
+      const scooter = new Scooter("Station A", user, 50, false); // A scooter with 50% charge and not broken
 
       scooter.rent(user); // Attempt to rent the scooter
 
@@ -32,20 +29,24 @@ describe("scooter methods", () => {
 
     test("should throw an error if scooter is broken", () => {
       const user = new User("Joe Bloggs", "password123", 21);
-      const scooter = new Scooter("Station A", 50, true); // A broken scooter with 50% charge
+      const scooter = new Scooter("Station A", user, 50, true); // A broken scooter with 50% charge
 
       // Assertions
-      expect(() => scooter.rent(user)).toThrow("Scooter needs repair");
+      expect(() => scooter.rent(user)).toThrow(
+        "scooter needs to charge or scooter needs repair"
+      );
       expect(scooter.station).toBe("Station A"); // Scooter should still be at the station
       expect(scooter.user).toBe(null); // No user should be assigned
     });
 
     test("should throw an error if scooter needs to charge", () => {
       const user = new User("Joe Bloggs", "password123", 21);
-      const scooter = new Scooter("Station A", 10, false); // A scooter with only 10% charge, but not broken
+      const scooter = new Scooter("Station A", user, 10, false); // A scooter with only 10% charge, but not broken
 
       // Assertions
-      expect(() => scooter.rent(user)).toThrow("Scooter needs to charge");
+      expect(() => scooter.rent(user)).toThrow(
+        "scooter needs to charge or scooter needs repair"
+      );
       expect(scooter.station).toBe("Station A"); // Scooter should still be at the station
       expect(scooter.user).toBe(null); // No user should be assigned
     });
@@ -53,7 +54,8 @@ describe("scooter methods", () => {
 
   // dock method
   describe("dock (station) method Test", () => {
-    const scooter = new Scooter(null, 10, false);
+    const user = new User("Tom", "password123", 21);
+    const scooter = new Scooter(null, user, 10, false);
     test("Return the scooter to the station. Be sure to clear out the user", () => {
       scooter.dock("station A");
       // we cleared the user
@@ -63,31 +65,54 @@ describe("scooter methods", () => {
     });
   });
 
-  // requestRepair method
   describe("requestRepair() method", () => {
-    const scooter = new Scooter("station A", 10, true);
-
-    test("setInterval timer to schedule a repair in 5 seconds.", () => {
-      jest.advanceTimersByTime(5000);
+    const user = new User("Juba", "password123", 21);
+    const scooter = new Scooter("station A", user, 10, true);
+    test("setInterval timer to schedule a repair in 5 seconds.", async () => {
+      const logSpy = jest.spyOn(console, "log");
       scooter.requestRepair();
-      expect(console.log).toHaveBeenCalledWith("repair completed");
-    });
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      expect(scooter.isBroken).toBe(false);
+      expect(logSpy).toHaveBeenCalledWith("repair completed");
+    },10000);
   });
 
-  // charge method
+  // charge method// first way to do it
+
+  // describe(" recharge scooter  to 100%.", () => {
+  //      test("Set a timer to incrementally update the Scooter's charge to 100.",async()=>{
+  //       const user = new User("Juba", "password123", 21);
+  //       const scooter = new Scooter("Station A", user, 30, false)
+  //       await scooter.recharge(); // we need to wait for the charge!
+  //       await new Promise(resolve => setTimeout(resolve, 3000));
+  //       expect(scooter.charge).toBe(100)
+  //      },20000)
   describe(" recharge scooter  to 100%.", () => {
-    const scooter = new Scooter("station A", 10, false);
-    test("Set a timer to incrementally update the Scooter's charge to 100.", () => {
+    test("Set a timer to incrementally update the Scooter's charge to 100%", async () => {
+      const user = new User("Juba", "password123", 21);
+      const scooter = new Scooter("Station A", user, 30, false); // Start with 30% charge
+
+      jest.useFakeTimers(); // Use fake timers to control time
+
+      // Call the recharge method
       scooter.recharge();
 
+      // Simulate 1 second passing
       jest.advanceTimersByTime(1000);
-      expect(scooter.charge).toBe(20);
+      expect(scooter.charge).toBe(40); // Check if the charge is incremented
 
-      jest.advanceTimersByTime(6000);
-      expect(scooter.charge).toBe(80);
-
+      // Simulate another 5 seconds passing
       jest.advanceTimersByTime(5000);
+      expect(scooter.charge).toBe(90); // Check if the charge is incremented
+
+      // Simulate additional time to ensure full charge
+      jest.advanceTimersByTime(1000);
+      expect(scooter.charge).toBe(100); // Check if the charge has reached 100%
+
+      //even when wait more time the charge max should not exceed the 100%
+      jest.advanceTimersByTime(2000);
       expect(scooter.charge).toBe(100);
-    });
+      jest.useRealTimers(); // Restore real timers
+    }, 10000);
   });
 });
